@@ -1,0 +1,102 @@
+@page
+@model BookNest.Pages_Books.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<div class="row">
+    <form class="d-flex" role="search" asp-page="./Index" method="get">
+        <div class="col-3">
+            <div class="input-group">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input class="form-control me-2" type="search" name="CurrentSearch" value="@Model.CurrentSearch" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].ImageURL)
+            </th>
+            <th>
+                @{
+                    var titleSort = "title_asc";
+                    if (Model.CurrentSort == "title_asc")
+                    {
+                        titleSort = "title_desc";
+                    }
+                }
+                <a asp-page="./Index" asp-route-CurrentSort="@titleSort" asp-route-PageNum="@Model.PageNum">@Html.DisplayNameFor(model => model.Book[0].Title)</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Book[0].Description)
+            </th>
+            <th>
+                                @Html.DisplayNameFor(model => model.Book[0].Reviews)
+
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Book) {
+        <tr>
+            <td>
+                <img src="@item.ImageURL" class="img-thumbnail" >
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+
+                @foreach(var review in item.Reviews)
+                {
+                    <p><span class="d-inline-block text-fluid" style="max-width: 300px;">@Html.DisplayFor(modelItem => review.ReviewText)</span><br /><strong>Score: @Html.DisplayFor(modelItem => review.Score)/5</strong></p>
+                }
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.BookID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.BookID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.BookID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<hr />
+@{
+    var prevDisabled = "";
+    var nextDisabled = "";
+    if (Model.PageNum <= 1)
+    {
+        prevDisabled = "disabled";
+    }
+    if (Model.PageNum >= Model.TotalPages)
+    {
+        nextDisabled = "disabled";
+    }
+}
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+        <li class="page-item @prevDisabled"><a class="page-link" asp-page="./Index" asp-route-PageNum="@(Model.PageNum - 1)">Previous</a></li>
+        <li class="page-item @nextDisabled"><a class="page-link" asp-page="./Index" asp-route-PageNum="@(Model.PageNum + 1)">Next</a></li>
+    </ul>
+</nav>
