@@ -11,3 +11,5 @@ Above is a preview of the homepage to the website. I have several navigation tab
 ![App Screenshot](reviews.png)
 
 When you click "Our Books" at the top, it shows you a list of all the books with descriptions and the authors.
+
+![App Screenshot](bookdescriptions.png)
